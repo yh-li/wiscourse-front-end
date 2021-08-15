@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CourseDataService from "../services/course";
 import { Link } from "react-router-dom";
-import { PromiseProvider } from "mongoose";
 function Course(props) {
   const initialCourseState = {
     id: null,
