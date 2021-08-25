@@ -75,9 +75,6 @@ function App() {
           </li>
         </div>
       </nav>
-      <button className="btn btn-outline-secondary" type="button">
-        ?????
-      </button>
       <div className="container mt-3">
         <Switch>
           <Route exact path={["/", "/courses"]} component={CoursesList} />
