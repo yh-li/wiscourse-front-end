@@ -6,7 +6,9 @@ import AddReview from "./components/add-review";
 import Course from "./components/course";
 import CoursesList from "./components/courses-list";
 import Login from "./components/login";
-
+import CourseDataService from "./services/course";
+import coursesText from "./courses";
+import course from "./services/course";
 function App() {
   const [user, setUser] = useState(null);
   //these are
@@ -16,6 +18,34 @@ function App() {
   async function logout() {
     setUser(null);
   }
+  /*   async function addCourses() {
+    console.log("User wants to add courses");
+    const courses = coursesText.split("\n");
+    //ajax playground
+    console.log(courses);
+    var interval = 30 * 1000; //1 second
+    for (var i = 0; ; i++) {
+      if (i * 1000 >= courses.length) break;
+      setTimeout(
+        (i) => {
+          for (var j = 0; j < 1000; j++) {
+            if (1000 * i + j >= courses.length) break;
+            const [dep, courseNo, courseName] =
+              courses[1000 * i + j].split("\t");
+            var data = {
+              number: courseNo,
+              courseName: courseName,
+              dep: dep,
+            };
+            CourseDataService.createCourse(data);
+            //console.log(data);
+          }
+        },
+        i * interval,
+        i
+      );
+    }
+  } */
   return (
     <div className="App">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -45,6 +75,9 @@ function App() {
           </li>
         </div>
       </nav>
+      <button className="btn btn-outline-secondary" type="button">
+        ?????
+      </button>
       <div className="container mt-3">
         <Switch>
           <Route exact path={["/", "/courses"]} component={CoursesList} />

@@ -22,5 +22,9 @@ class CourseDataService {
   getDeps() {
     return http.get("/deps");
   }
+  createCourse(data) {
+    console.log("Trying to create course");
+    return http.post("/create", data);
+  }
 }
 export default new CourseDataService();

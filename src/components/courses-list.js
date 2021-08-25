@@ -103,6 +103,7 @@ function CoursesList(props) {
             </button>
           </div>
         </div>
+
         <div className="input-group col-lg-4">
           <select onChange={onChangeSearchDep}>
             {deps.map((dep) => {
