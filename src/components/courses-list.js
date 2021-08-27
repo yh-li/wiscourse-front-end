@@ -24,17 +24,15 @@ function CoursesList(props) {
   const retrieveCourses = () => {
     CourseDataService.getAll()
       .then((response) => {
-        console.log(response.data);
-        setCourses(response.data.courses);
+        setCourses(response.data);
       })
       .catch((e) => {
-        console.log(e);
+        console.log("Error in retriving courses: ", e);
       });
   };
   const retrieveDeps = () => {
     CourseDataService.getDeps()
       .then((response) => {
-        console.log(response.data);
         setDeps(["All Departments"].concat(response.data));
       })
       .catch((e) => {
@@ -44,24 +42,19 @@ function CoursesList(props) {
   const refreshList = () => {
     retrieveCourses();
   };
-  const find = (query, by) => {
-    CourseDataService.find(query, by)
+  const find = () => {
+    const query = {};
+    if (searchDep) query.dep = searchDep;
+    if (searchName) query.name = searchName;
+    if (searchNo) query.no = searchNo;
+    CourseDataService.find(query)
       .then((response) => {
         console.log(response.data);
-        setCourses(response.data.courses);
+        setCourses(response.data);
       })
       .catch((e) => {
         console.log(e);
       });
-  };
-  const findByName = () => {
-    find(searchName, "name");
-  };
-  const findByNo = () => {
-    find(searchNo, "no");
-  };
-  const findByDep = () => {
-    find(searchDep, "dep");
   };
 
   return (
@@ -75,15 +68,6 @@ function CoursesList(props) {
             value={searchName}
             onChange={onChangeSearchName}
           />
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              onClick={findByName}
-            >
-              Search
-            </button>
-          </div>
         </div>
         <div className="input-group col-lg-4">
           <input
@@ -93,15 +77,6 @@ function CoursesList(props) {
             value={searchNo}
             onChange={onChangeSearchNo}
           />
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              onClick={findByNo}
-            >
-              Search
-            </button>
-          </div>
         </div>
 
         <div className="input-group col-lg-4">
@@ -110,15 +85,15 @@ function CoursesList(props) {
               return <option value={dep}>{dep.substr(0, 20)}</option>;
             })}
           </select>
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              onClick={findByDep}
-            >
-              Search
-            </button>
-          </div>
+        </div>
+        <div className="input-group-append">
+          <button
+            className="btn btn-outline-secondary"
+            type="button"
+            onClick={find}
+          >
+            Search
+          </button>
         </div>
       </div>
       <div className="row">

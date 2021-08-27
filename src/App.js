@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route, Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Switch, Route, Link, useHistory } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import AddReview from "./components/add-review";
 import Course from "./components/course";
 import CoursesList from "./components/courses-list";
+import ReviewsList from "./components/reviews-list";
 import Login from "./components/login";
-import CourseDataService from "./services/course";
-import coursesText from "./courses";
-import course from "./services/course";
+import Register from "./components/Register";
+import AuthContext from "./context/AuthContext";
+import http from "./http-common";
 function App() {
-  const [user, setUser] = useState(null);
+  const { loggedInUsername, getLoggedIn } = useContext(AuthContext);
   //these are
-  async function login(user = null) {
-    setUser(user);
-  }
+  const history = useHistory();
   async function logout() {
-    setUser(null);
+    await http.get("/auth/logout");
+    await getLoggedIn();
+    history.push("/");
   }
   /*   async function addCourses() {
     console.log("User wants to add courses");
@@ -59,20 +60,31 @@ function App() {
             </Link>
           </li>
           <li className="nav-item">
-            {user ? (
+            {loggedInUsername && (
               <a
                 onClick={logout}
                 className="nav-link"
                 style={{ cursor: "pointer" }}
               >
-                Logout {user.name}
+                Logout
               </a>
-            ) : (
-              <Link to={"/login"} className="nav-link">
-                Login
-              </Link>
             )}
           </li>
+
+          {!loggedInUsername && (
+            <>
+              <li className="nav-item">
+                <Link to={"/login"} className="nav-link">
+                  Login
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/register"} className="nav-link">
+                  Register
+                </Link>
+              </li>
+            </>
+          )}
         </div>
       </nav>
       <div className="container mt-3">
@@ -80,16 +92,18 @@ function App() {
           <Route exact path={["/", "/courses"]} component={CoursesList} />
           <Route
             path="/courses/:id/review"
-            render={(props) => <AddReview {...props} user={user} />} //loading addreview component through render since this has props
+            render={(props) => <AddReview {...props} />} //loading addreview component through render since this has props
           />
           <Route
             path="/courses/:id"
-            render={(props) => <Course {...props} user={user} />} //loading addreview component through render since this has props
+            render={(props) => <Course {...props} />} //loading addreview component through render since this has props
           />
           <Route
             path="/login"
-            render={(props) => <Login {...props} login={login} />} //loading addreview component through render since this has props
+            component={Login} //loading addreview component through render since this has props
           />
+          <Route path="/register" component={Register} />
+          <Route path="/reviews" component={ReviewsList} />
         </Switch>
       </div>
     </div>

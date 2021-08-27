@@ -7,8 +7,13 @@ class CourseDataService {
   get(id) {
     return http.get(`/id/${id}`);
   }
-  find(query, by = "name", page = 0) {
-    return http.get(`?${by}=${query}&page=${page}`);
+  find(query, page = 0) {
+    var getURL = "?";
+    for (const [key, value] of Object.entries(query)) {
+      getURL += key + "=" + value + "&";
+    }
+    getURL += "page=" + page;
+    return http.get(getURL);
   }
   createReview(data) {
     return http.post("/reviews", data);
@@ -21,10 +26,6 @@ class CourseDataService {
   }
   getDeps() {
     return http.get("/deps");
-  }
-  createCourse(data) {
-    console.log("Trying to create course");
-    return http.post("/create", data);
   }
 }
 export default new CourseDataService();

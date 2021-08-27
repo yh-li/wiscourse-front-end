@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import CourseDataService from "../services/course";
 import { Link } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 const AddReview = (props) => {
+  const { loggedInUsername } = useContext(AuthContext);
+  //see if we can find a review from the curent user for the current course
+
   let initialReviewState = "";
   let editing = false;
   if (props.location.state && props.location.state.currentReview) {
@@ -43,7 +47,7 @@ const AddReview = (props) => {
   };
   return (
     <div>
-      {props.user ? (
+      {loggedInUsername ? (
         <div className="submit-form">
           {submitted ? (
             <div>

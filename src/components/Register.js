@@ -2,31 +2,33 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import http from "../http-common";
-function Login() {
+function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVerify, setPasswordVerify] = useState("");
+  const [username, setUsername] = useState("");
   const { getLoggedIn } = useContext(AuthContext);
   const history = useHistory();
-  async function login(e) {
+  async function register(e) {
     e.preventDefault();
     try {
-      const loginData = {
+      const registerData = {
         email: email,
         password: password,
+        confirmPassword: passwordVerify,
+        username: username,
       };
-      const LogInUser = await http.post("/auth/login", loginData);
-
+      const newUser = await http.post("/auth/register", registerData);
       getLoggedIn();
-      //console.log("Successfully logged in user ", loggedInUser);
       history.push("/");
     } catch (err) {
-      console.error(err);
+      alert(err.response.data.errorMessage);
     }
   }
   return (
     <div>
-      <h1>Log In:</h1>
-      <form onSubmit={login}>
+      <h1>Register a new account</h1>
+      <form onSubmit={register}>
         <input
           type="email"
           placeholder="Email"
@@ -34,15 +36,27 @@ function Login() {
           value={email}
         />
         <input
+          type="text"
+          placeholder="username"
+          onChange={(e) => setUsername(e.target.value)}
+          value={username}
+        />
+        <input
           type="password"
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
         />
-        <button type="submit">Log In</button>
+        <input
+          type="password"
+          placeholder="Verify Your Password"
+          onChange={(e) => setPasswordVerify(e.target.value)}
+          value={passwordVerify}
+        />
+        <button type="submit">Register</button>
       </form>
     </div>
   );
 }
 
-export default Login;
+export default Register;

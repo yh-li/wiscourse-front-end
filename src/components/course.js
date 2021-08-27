@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CourseDataService from "../services/course";
 import { Link } from "react-router-dom";
+import http from "../http-common";
 function Course(props) {
   const initialCourseState = {
     id: null,
@@ -10,11 +11,13 @@ function Course(props) {
     reviews: [],
   };
   const [course, setCourse] = useState(initialCourseState);
+  const [reviews, setReviews] = useState([]);
   const getCourse = (id) => {
     CourseDataService.get(id)
       .then((response) => {
-        setCourse(response.data);
-        console.log(response.data);
+        setCourse(response.data.course);
+        console.log(response.data.course);
+        setReviews(response.data.reviews);
       })
       .catch((e) => {
         console.log(e);
@@ -44,7 +47,7 @@ function Course(props) {
           <h5>{course.name}</h5>
           <p>
             <strong>
-              {course.dep} {course.no}
+              {course.dep} {course.number}
             </strong>
           </p>
           <Link
@@ -55,8 +58,8 @@ function Course(props) {
           </Link>
           <h4>Reviews</h4>
           <div className="row">
-            {course.reviews.length > 0 ? (
-              course.reviews.map((review, index) => (
+            {reviews && reviews.length > 0 ? (
+              reviews.map((review, index) => (
                 <div className="col-lg-4 pb-1" key={index}>
                   <div className="card">
                     <div className="card-body">
@@ -66,7 +69,7 @@ function Course(props) {
                         {review.name}
                         <br />
                         <strong>Date: </strong>
-                        {review.date}
+                        {review.create_date}
                       </p>
                       {props.user && props.user.id === review.user_id && (
                         <div className="row">
