@@ -39,9 +39,9 @@ function CoursesList(props) {
         console.log(e);
       });
   };
-  const refreshList = () => {
+  /*   const refreshList = () => {
     retrieveCourses();
-  };
+  }; */
   const find = () => {
     const query = {};
     if (searchDep) query.dep = searchDep;
@@ -49,7 +49,6 @@ function CoursesList(props) {
     if (searchNo) query.no = searchNo;
     CourseDataService.find(query)
       .then((response) => {
-        console.log(response.data);
         setCourses(response.data);
       })
       .catch((e) => {
@@ -82,7 +81,11 @@ function CoursesList(props) {
         <div className="input-group col-lg-4">
           <select onChange={onChangeSearchDep}>
             {deps.map((dep) => {
-              return <option value={dep}>{dep.substr(0, 20)}</option>;
+              return (
+                <option value={dep} key={dep}>
+                  {dep.substr(0, 20)}
+                </option>
+              );
             })}
           </select>
         </div>
@@ -98,9 +101,8 @@ function CoursesList(props) {
       </div>
       <div className="row">
         {courses.map((course) => {
-          const sum = `${course.dep} ${course.number}`;
           return (
-            <div className="col-lg-4 pb-1">
+            <div className="col-lg-4 pb-1" key={course._id}>
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">
@@ -114,13 +116,13 @@ function CoursesList(props) {
                     >
                       View Reviews
                     </Link>
-                    <a
+                    {/*                     <a
                       target="_blank"
                       href={"https://www.google.com/maps/place/" + "Madison"}
                       className="btn btn-primary col-lg-5 mx-1 mb-1"
                     >
                       View Map
-                    </a>
+                    </a> */}
                   </div>
                 </div>
               </div>

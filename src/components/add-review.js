@@ -1,31 +1,41 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CourseDataService from "../services/course";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import http from "../http-common";
 const AddReview = (props) => {
   const { loggedInUsername } = useContext(AuthContext);
   //see if we can find a review from the curent user for the current course
-
-  let initialReviewState = "";
-  let editing = false;
-  if (props.location.state && props.location.state.currentReview) {
-    editing = true;
-    initialReviewState = props.location.state.currentReview.text;
-  }
-  const [review, setReview] = useState(initialReviewState);
+  const [review, setReview] = useState();
+  const getReview = (course_id, username) => {
+    if (course_id && username) {
+      http.get(`/reviews/${username}/${course_id}`).then((response) => {
+        console.log(response);
+        let existing = false;
+        if (response.data) existing = true;
+        setReview({ editing: existing, review: response.data });
+      });
+    }
+  };
+  useEffect(() => {
+    getReview(props.match.params.course_id, loggedInUsername);
+  }, [props.match.params.course_id, loggedInUsername]);
   const [submitted, setSubmitted] = useState(false);
   const handleInputChange = (event) => {
-    setReview(event.target.value);
+    setReview((prevReview) => ({
+      ...prevReview,
+      review: { ...prevReview.review, text: event.target.value },
+    }));
   };
   const saveReview = () => {
+    console.log(review);
     var data = {
-      text: review,
-      name: props.user.name,
-      user_id: props.user.id,
-      course_id: props.match.params.id,
+      text: review.review.text,
+      username: loggedInUsername,
+      course_id: props.match.params.course_id,
     };
-    if (editing) {
-      data.review_id = props.location.state.currentReview._id;
+    if (review.editing) {
+      data.review_id = review.review._id;
       CourseDataService.updateReview(data)
         .then((response) => {
           setSubmitted(true);
@@ -53,24 +63,24 @@ const AddReview = (props) => {
             <div>
               <h4>You submitted successfully!</h4>
               <Link
-                to={"/courses/" + props.match.params.id}
+                to={"/courses/" + props.match.params.course_id}
                 className="btn btn-success"
               >
                 Back to Course
               </Link>
             </div>
-          ) : (
+          ) : review ? (
             <div>
               <div className="form-group">
                 <label htmlFor="description">
-                  {editing ? "Edit" : "Create"} Review
+                  {review.editing ? "Edit" : "Create"} Review
                 </label>
                 <input
                   type="text"
                   className="form-control"
                   id="text"
                   required
-                  value={review}
+                  value={review.review ? review.review.text : ""}
                   onChange={handleInputChange}
                   name="text"
                 />
@@ -79,6 +89,8 @@ const AddReview = (props) => {
                 Submit
               </button>
             </div>
+          ) : (
+            <label htmlFor="description">Review Loading...</label>
           )}
         </div>
       ) : (

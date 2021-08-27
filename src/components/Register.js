@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import http from "../http-common";
@@ -18,7 +18,7 @@ function Register() {
         confirmPassword: passwordVerify,
         username: username,
       };
-      const newUser = await http.post("/auth/register", registerData);
+      await http.post("/auth/register", registerData);
       getLoggedIn();
       history.push("/");
     } catch (err) {

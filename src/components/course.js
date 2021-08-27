@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CourseDataService from "../services/course";
 import { Link } from "react-router-dom";
-import http from "../http-common";
+import AuthContext from "../context/AuthContext";
+import Moment from "react-moment";
+import "moment-timezone";
 function Course(props) {
   const initialCourseState = {
     id: null,
@@ -12,11 +14,11 @@ function Course(props) {
   };
   const [course, setCourse] = useState(initialCourseState);
   const [reviews, setReviews] = useState([]);
+  const { loggedInUsername } = useContext(AuthContext);
   const getCourse = (id) => {
     CourseDataService.get(id)
       .then((response) => {
         setCourse(response.data.course);
-        console.log(response.data.course);
         setReviews(response.data.reviews);
       })
       .catch((e) => {
@@ -27,12 +29,12 @@ function Course(props) {
     getCourse(props.match.params.id);
   }, [props.match.params.id]);
   const deleteReview = (reviewId, index) => {
-    CourseDataService.deleteReview(reviewId, props.user.id)
+    CourseDataService.deleteReview(reviewId)
       .then((response) => {
-        setCourse((prevState) => {
-          prevState.reviews.splice(index, 1);
+        setReviews((prevReviews) => {
+          prevReviews.splice(index, 1);
           return {
-            ...prevState,
+            ...prevReviews,
           };
         });
       })
@@ -66,19 +68,22 @@ function Course(props) {
                       <p className="card-text">
                         {review.text} <br />
                         <strong>User: </strong>
-                        {review.name}
+                        {review.username}
                         <br />
-                        <strong>Date: </strong>
-                        {review.create_date}
+                        <strong>Created: </strong>
+                        <Moment format="YYYY/MM/DD hh:mm" tz="America/Chicago">
+                          {review.create_date}
+                        </Moment>
+                        <span> CDT</span>
                       </p>
-                      {props.user && props.user.id === review.user_id && (
+                      {loggedInUsername === review.username && (
                         <div className="row">
-                          <a
+                          <button
                             onClick={() => deleteReview(review._id, index)}
                             className="btn btn-primary col-lg-5 mx-1 mb-1"
                           >
                             Delete
-                          </a>
+                          </button>
                           <Link
                             to={{
                               pathname:

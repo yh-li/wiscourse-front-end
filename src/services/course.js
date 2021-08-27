@@ -21,8 +21,8 @@ class CourseDataService {
   updateReview(data) {
     return http.put("/reviews", data);
   }
-  deleteReview(id, userId) {
-    return http.delete(`/reviews?id=${id}`, { data: { user_id: userId } });
+  deleteReview(id) {
+    return http.delete(`/reviews`, { data: { review_id: id } });
   }
   getDeps() {
     return http.get("/deps");

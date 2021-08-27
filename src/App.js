@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -65,6 +65,7 @@ function App() {
                 onClick={logout}
                 className="nav-link"
                 style={{ cursor: "pointer" }}
+                href="/"
               >
                 Logout
               </a>
@@ -91,7 +92,7 @@ function App() {
         <Switch>
           <Route exact path={["/", "/courses"]} component={CoursesList} />
           <Route
-            path="/courses/:id/review"
+            path="/courses/:course_id/review"
             render={(props) => <AddReview {...props} />} //loading addreview component through render since this has props
           />
           <Route

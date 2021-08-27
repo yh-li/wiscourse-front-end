@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import http from "../http-common";
@@ -14,7 +14,7 @@ function Login() {
         email: email,
         password: password,
       };
-      const LogInUser = await http.post("/auth/login", loginData);
+      await http.post("/auth/login", loginData);
 
       getLoggedIn();
       //console.log("Successfully logged in user ", loggedInUser);
@@ -22,7 +22,7 @@ function Login() {
     } catch (err) {
       console.error(err);
       console.log(err.response);
-      alert(err.response);
+      alert(err.response.data.errorMessage);
     }
   }
   return (
