@@ -4,11 +4,12 @@ class CourseDataService {
   getAll(page = 0) {
     return http.get(`?page=${page}`); // this is the url added to the base URL
   }
-  get(id) {
-    return http.get(`/id/${id}`);
+  get(id, page = 0) {
+    return http.get(`/id/${id}?page=${page}`);
   }
   find(query, page = 0) {
     var getURL = "?";
+    console.log(query);
     for (const [key, value] of Object.entries(query)) {
       getURL += key + "=" + value + "&";
     }

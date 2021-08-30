@@ -1,0 +1,22 @@
+.course-card {
+  margin: 8px auto;
+}
+.course-name {
+  height: 60px;
+}
+.pagination-bar {
+  display: flex;
+  margin: 5px auto;
+}
+.page-box {
+  width: 45px;
+}
+.page-box .page-link {
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.search-bar {
+  display: flex;
+}

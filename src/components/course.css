@@ -1,0 +1,7 @@
+.card-text-footer {
+  display: flex;
+  justify-content: space-between;
+}
+.card-text-footer-left {
+  display: flex;
+}
